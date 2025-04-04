@@ -34,8 +34,28 @@ pub fn mork_map_frame(vspace: usize, frame: usize, vaddr: usize, vm_rights: VMRi
     }
 }
 
-pub fn mork_unmap_frame() -> Result<(), ResponseLabel> {
-    Ok(())
+pub fn mork_unmap_frame(vspace: usize, frame: usize) -> Result<(), ResponseLabel> {
+    let message_info = MessageInfo::new(
+        InvocationLabel::PageUnmap, 0, 0, 1
+    );
+    let mut mr0 = frame;
+    let mut mr1 = 0;
+    let mut mr2 = 0;
+    let mut mr3 = 0;
+    let out_tag = call_with_mrs(
+        vspace,
+        message_info,
+        &mut mr0,
+        &mut mr1,
+        &mut mr2,
+        &mut mr3,
+    );
+
+    if out_tag.get_label() != ResponseLabel::Success as usize {
+        Err(ResponseLabel::from_usize(out_tag.get_label()))
+    } else {
+        Ok(())
+    }
 }
 
 pub fn mork_map_page_table(vspace: usize, page_table: usize, vaddr: usize) -> Result<(), ResponseLabel> {
@@ -65,8 +85,28 @@ pub fn mork_map_page_table(vspace: usize, page_table: usize, vaddr: usize) -> Re
     }
 }
 
-pub fn mork_unmap_page_table() -> Result<(), ResponseLabel> {
-    Ok(())
+pub fn mork_unmap_page_table(vspace: usize, page_table: usize) -> Result<(), ResponseLabel> {
+    let message_info = MessageInfo::new(
+        InvocationLabel::PageTableUnmap, 0, 0, 1
+    );
+    let mut mr0 = page_table;
+    let mut mr1 = 0;
+    let mut mr2 = 0;
+    let mut mr3 = 0;
+    let out_tag = call_with_mrs(
+        vspace,
+        message_info,
+        &mut mr0,
+        &mut mr1,
+        &mut mr2,
+        &mut mr3,
+    );
+
+    if out_tag.get_label() != ResponseLabel::Success as usize {
+        Err(ResponseLabel::from_usize(out_tag.get_label()))
+    } else {
+        Ok(())
+    }
 }
 
 pub fn mork_map_frame_anyway(cspace: usize, vspace: usize, frame: usize, vaddr: usize, vm_rights: VMRights)
