@@ -1,6 +1,6 @@
 use mork_common::constants::ObjectType;
 use mork_common::syscall::message_info::{InvocationLabel, MessageInfo, ResponseLabel};
-use crate::riscv::syscall::call_with_mrs;
+use crate::hal::call_with_mrs;
 
 pub fn mork_alloc_object(cspace: usize, obj_type: ObjectType) -> Result<usize, ResponseLabel> {
     let message_info = MessageInfo::new(

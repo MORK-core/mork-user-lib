@@ -1,12 +1,13 @@
 use core::fmt;
 use core::fmt::Write;
+use crate::hal::sys_put_char;
 
 struct Stdout;
 
 impl Write for Stdout {
     fn write_str(&mut self, s: &str) -> fmt::Result {
         for c in s.chars() {
-            super::sys_put_char(c as u8);
+            sys_put_char(c as u8);
         }
         Ok(())
     }
