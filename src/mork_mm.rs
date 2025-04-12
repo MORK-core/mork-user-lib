@@ -12,7 +12,7 @@ pub fn mork_map_frame(vspace: usize, frame: usize, vaddr: usize, vm_rights: VMRi
         return Err(ResponseLabel::InvalidParam);
     }
     let message_info = MessageInfo::new(
-        InvocationLabel::PageMap, 0, 0, 3
+        InvocationLabel::PageMap, 0, 0, 4
     );
     let mut mr0 = frame;
     let mut mr1 = vaddr;
