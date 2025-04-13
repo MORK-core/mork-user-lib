@@ -25,3 +25,27 @@ pub fn mork_alloc_object(cspace: usize, obj_type: ObjectType) -> Result<usize, R
         Ok(mr0)
     }
 }
+
+pub fn mork_delete_object(cspace: usize, object: usize) -> Result<usize, ResponseLabel> {
+    let message_info = MessageInfo::new(
+        InvocationLabel::CNodeDelete, 0, 0, 1
+    );
+    let mut mr0 = object;
+    let mut mr1 = 0;
+    let mut mr2 = 0;
+    let mut mr3 = 0;
+    let out_tag = call_with_mrs(
+        cspace,
+        message_info,
+        &mut mr0,
+        &mut mr1,
+        &mut mr2,
+        &mut mr3,
+    );
+
+    if out_tag.get_label() != ResponseLabel::Success as usize {
+        Err(ResponseLabel::from_usize(out_tag.get_label()))
+    } else {
+        Ok(mr0)
+    }
+}

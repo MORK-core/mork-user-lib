@@ -6,7 +6,7 @@ use mork_common::mork_user_log;
 use mork_common::syscall::message_info::{InvocationLabel, MessageInfo, ResponseLabel};
 use mork_common::types::{ResultWithErr, ResultWithValue};
 use crate::hal::call_with_mrs;
-use crate::mork_alloc::mork_alloc_object;
+use crate::mork_cspace::mork_alloc_object;
 use crate::mork_ipc_buffer::{with_ipc_buffer, with_ipc_buffer_mut};
 
 pub fn mork_thread_suspend(thread: usize) -> ResultWithErr<ResponseLabel> {

@@ -3,7 +3,7 @@ use mork_common::constants::{CNodeSlot, ObjectType};
 use mork_common::mork_user_log;
 use mork_common::syscall::ipc_buffer::IPCBuffer;
 use mork_common::types::{JustResult, VMRights};
-use crate::mork_alloc::mork_alloc_object;
+use crate::mork_cspace::mork_alloc_object;
 use crate::mork_mm::mork_map_frame_anyway;
 use crate::mork_task::mork_thread_set_ipc_buffer;
 
@@ -16,7 +16,7 @@ struct IPCBufferWrapper {
 }
 
 pub fn ipc_buffer_init(thread: usize ,vaddr: usize) -> JustResult {
-    match mork_alloc_object(CNodeSlot::CapInitCNode as usize, ObjectType::Frame) {
+    match mork_alloc_object(CNodeSlot::CapInitCNode as usize, ObjectType::Frame4K) {
         Ok(frame_handler) => {
             mork_user_log!(debug, "success to allocate memory: {:?}", frame_handler);
             let vm_rights = VMRights::R | VMRights::W;
@@ -56,12 +56,6 @@ pub fn ipc_buffer_init(thread: usize ,vaddr: usize) -> JustResult {
         }
     }
 }
-// pub fn get_ipc_buffer() ->  &'static mut IPCBuffer {
-//     mork_user_log!(debug, "ipc buffer size: {}", size_of::<IPCBuffer>());
-//     unsafe {
-//         &mut *(IPC_BUFFER.buffer as *mut IPCBuffer)
-//     }
-// }
 
 pub fn with_ipc_buffer<F, T>(f: F) -> T
 where F: FnOnce(&IPCBuffer) -> T {

@@ -1,11 +1,10 @@
-use alloc::vec::Vec;
 use mork_common::constants::{ObjectType, NORMAL_PAGE_SIZE};
 use mork_common::mork_user_log;
 use mork_common::syscall::message_info::{InvocationLabel, MessageInfo, ResponseLabel};
 use mork_common::types::VMRights;
 use mork_common::utils::alignas::is_aligned;
 use crate::hal::call_with_mrs;
-use crate::mork_alloc::mork_alloc_object;
+use crate::mork_cspace::mork_alloc_object;
 
 pub fn mork_map_frame(vspace: usize, frame: usize, vaddr: usize, vm_rights: VMRights) -> Result<(), ResponseLabel> {
     if !is_aligned(vaddr, NORMAL_PAGE_SIZE) {
@@ -111,7 +110,7 @@ pub fn mork_unmap_page_table(vspace: usize, page_table: usize) -> Result<(), Res
 
 pub fn mork_map_frame_anyway(cspace: usize, vspace: usize, frame: usize, vaddr: usize, vm_rights: VMRights)
     -> Result<(), ResponseLabel> {
-    let mut mapped_page_table = Vec::new();
+    // let mut mapped_page_table = Vec::new();
     loop {
         match mork_map_frame(
             vspace,
@@ -126,7 +125,7 @@ pub fn mork_map_frame_anyway(cspace: usize, vspace: usize, frame: usize, vaddr: 
                         Ok(page_table) => {
                             match mork_map_page_table(vspace, page_table, vaddr) {
                                 Ok(_) => {
-                                    mapped_page_table.push(page_table);
+                                    // mapped_page_table.push(page_table);
                                     continue;
                                 }
                                 Err(resp_inner) => {
