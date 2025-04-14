@@ -3,7 +3,7 @@
 
 _start:
     la sp, boot_stack_top
-    call main
+    call entry
 
     .section .bss.stack
     .globl boot_stack_lower_bound

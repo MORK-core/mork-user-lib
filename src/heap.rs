@@ -2,12 +2,11 @@ use core::alloc::{GlobalAlloc, Layout};
 use core::ptr::NonNull;
 use buddy_system_allocator::Heap;
 use spin::mutex::Mutex;
-use mork_common::constants::CNodeSlot::{CapInitCNode, CapInitVSpace};
-use mork_common::constants::ObjectType;
+use mork_common::constants::{CNodeSlot, ObjectType};
 use mork_common::mork_user_log;
 use mork_common::types::{JustResult, VMRights};
-use crate::mork_cspace::mork_alloc_object;
 use crate::mork_mm::mork_map_frame_anyway;
+use crate::mork_task::mork_alloc_object;
 
 const HEAP_START: usize = 0x0000_4440_0000;
 const HEAP_SIZE: usize = 1 << 21;
@@ -17,14 +16,15 @@ const ORDER: usize = 32;
 static HEAP: Mutex<Heap<ORDER>> = Mutex::new(Heap::empty());
 
 pub fn init() -> JustResult {
-    match mork_alloc_object(CapInitCNode as usize, ObjectType::Frame2M) {
+    match mork_alloc_object(CNodeSlot::CapInitThread as usize, ObjectType::Frame2M) {
         Ok(frame) => {
             if let Err(resp) = mork_map_frame_anyway(
-                CapInitCNode as usize,
-                CapInitVSpace as usize,
+                CNodeSlot::CapInitThread as usize,
+                CNodeSlot::CapInitVSpace as usize,
                 frame,
                 HEAP_START,
-                VMRights::R | VMRights::W
+                VMRights::R | VMRights::W,
+                &mut None,
             ) {
                 mork_user_log!(error, "fail to map heap memory, {:?}", resp);
                 return Err(());
