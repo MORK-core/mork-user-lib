@@ -5,7 +5,7 @@ use mork_common::syscall::message_info::{InvocationLabel, MessageInfo, ResponseL
 use mork_common::types::{ResultWithErr, VMRights};
 use mork_common::utils::alignas::is_aligned;
 use crate::hal::call_with_mrs;
-use crate::mork_task::mork_alloc_object;
+use crate::mork_cspace::mork_alloc_object;
 
 pub fn mork_map_frame(vspace: usize, frame: usize, vaddr: usize, vm_rights: VMRights) -> Result<(), ResponseLabel> {
     if !is_aligned(vaddr, PAGE_SIZE_NORMAL) {

@@ -3,8 +3,9 @@ use mork_common::constants::{CNodeSlot, ObjectType};
 use mork_common::mork_user_log;
 use mork_common::syscall::ipc_buffer::IPCBuffer;
 use mork_common::types::{JustResult, VMRights};
+use crate::mork_cspace::mork_alloc_object;
 use crate::mork_mm::mork_map_frame_anyway;
-use crate::mork_task::{mork_alloc_object, mork_thread_set_ipc_buffer};
+use crate::mork_task::mork_thread_set_ipc_buffer;
 
 #[thread_local]
 static IPC_BUFFER: RefCell<Option<IPCBufferWrapper>> = RefCell::new(None);

@@ -12,6 +12,7 @@ pub fn riscv_sys_send_recv(sys: isize, dest: usize, out_badge: &mut usize, info:
         in("a4") *in_out_mr2,
         in("a5") *in_out_mr3,
         in("a7") sys,
+        clobber_abi("C")
         );
     }
     unsafe {

@@ -8,6 +8,38 @@ pub fn sys_put_char(v8: u8) {
                   &mut 0, &mut 0, &mut 0, &mut 0, &mut 0);
 }
 
+pub fn sys_nb_send(dest: usize) -> MessageInfo {
+    let mut info = MessageInfo {words: [0; 1]};
+    riscv_sys_send_recv(
+        mork_common::syscall::Syscall::SysNBSend as isize,
+        dest,
+        &mut 0,
+        info.words[0],
+        &mut info.words[0],
+        &mut 0,
+        &mut 0,
+        &mut 0,
+        &mut 0
+    );
+    info
+}
+
+pub fn sys_receive(dest: usize, badge: &mut usize) -> MessageInfo {
+    let mut info = MessageInfo {words: [0; 1]};
+    riscv_sys_send_recv(
+        mork_common::syscall::Syscall::SysRecv as isize,
+        dest,
+        badge,
+        info.words[0],
+        &mut info.words[0],
+        &mut 0,
+        &mut 0,
+        &mut 0,
+        &mut 0
+    );
+    info
+}
+
 pub fn call_with_mrs(dest: usize, msg_info: MessageInfo, mr0: &mut usize, mr1: &mut usize, mr2: &mut usize, mr3: &mut usize)
                      -> MessageInfo {
     let mut local_dest = dest;

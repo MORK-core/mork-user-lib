@@ -6,56 +6,8 @@ use mork_common::mork_user_log;
 use mork_common::syscall::message_info::{InvocationLabel, MessageInfo, ResponseLabel};
 use mork_common::types::{ResultWithErr, ResultWithValue};
 use crate::hal::call_with_mrs;
+use crate::mork_cspace::mork_alloc_object;
 use crate::mork_ipc_buffer::{with_ipc_buffer, with_ipc_buffer_mut};
-
-pub fn mork_alloc_object(task: usize, obj_type: ObjectType) -> Result<usize, ResponseLabel> {
-    let message_info = MessageInfo::new(
-        InvocationLabel::CNodeAlloc, 0, 0, 1
-    );
-    let mut mr0 = obj_type as usize;
-    let mut mr1 = 0;
-    let mut mr2 = 0;
-    let mut mr3 = 0;
-    let out_tag = call_with_mrs(
-        task,
-        message_info,
-        &mut mr0,
-        &mut mr1,
-        &mut mr2,
-        &mut mr3,
-    );
-
-    if out_tag.get_label() != ResponseLabel::Success as usize {
-        Err(ResponseLabel::from_usize(out_tag.get_label()))
-    } else {
-        Ok(mr0)
-    }
-}
-
-pub fn mork_delete_object(task: usize, object: usize) -> Result<usize, ResponseLabel> {
-    let message_info = MessageInfo::new(
-        InvocationLabel::CNodeDelete, 0, 0, 1
-    );
-    let mut mr0 = object;
-    let mut mr1 = 0;
-    let mut mr2 = 0;
-    let mut mr3 = 0;
-    let out_tag = call_with_mrs(
-        task,
-        message_info,
-        &mut mr0,
-        &mut mr1,
-        &mut mr2,
-        &mut mr3,
-    );
-
-    if out_tag.get_label() != ResponseLabel::Success as usize {
-        Err(ResponseLabel::from_usize(out_tag.get_label()))
-    } else {
-        Ok(mr0)
-    }
-}
-
 pub fn mork_thread_suspend(thread: usize) -> ResultWithErr<ResponseLabel> {
     let message_info = MessageInfo::new(
         InvocationLabel::TCBSuspend, 0, 0, 0
