@@ -38,6 +38,10 @@ pub fn entry() {
     mork_thread_suspend(CNodeSlot::CapInitThread as usize).unwrap();
 }
 
+pub fn mork_shutdown() {
+    hal::sys_shutdown();
+}
+
 pub fn dummy_function() {
 
 }

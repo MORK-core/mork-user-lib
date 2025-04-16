@@ -8,6 +8,11 @@ pub fn sys_put_char(v8: u8) {
                   &mut 0, &mut 0, &mut 0, &mut 0, &mut 0);
 }
 
+pub fn sys_shutdown() {
+    riscv_sys_send_recv(mork_common::syscall::Syscall::SysDebugShutdown as isize, 0, &mut 0, 0,
+                        &mut 0, &mut 0, &mut 0, &mut 0, &mut 0);
+}
+
 pub fn sys_nb_send(dest: usize) -> MessageInfo {
     let mut info = MessageInfo {words: [0; 1]};
     riscv_sys_send_recv(
