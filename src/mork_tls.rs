@@ -3,7 +3,7 @@ use core::alloc::Layout;
 use mork_common::constants::CNodeSlot;
 use mork_common::mork_user_log;
 use mork_common::types::JustResult;
-use crate::mork_task::mork_thread_set_tls_base;
+use crate::mork_task::mork_task_set_tls_base;
 
 pub fn tls_init() -> JustResult {
     const TLS_SIZE: usize = 4096;
@@ -16,7 +16,7 @@ pub fn tls_init() -> JustResult {
         return Err(());
     }
     if let Err(resp) =
-        mork_thread_set_tls_base(CNodeSlot::CapInitThread as usize, tls_addr as usize) {
+        mork_task_set_tls_base(CNodeSlot::CapInitThread as usize, tls_addr as usize) {
         mork_user_log!(error, "fail to set TLS base address: {:?}", resp);
         return Err(());
     }

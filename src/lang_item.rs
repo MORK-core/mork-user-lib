@@ -1,7 +1,7 @@
 use core::panic::PanicInfo;
 use mork_common::constants::CNodeSlot;
 use mork_common::mork_user_log;
-use crate::mork_task::mork_thread_suspend;
+use crate::mork_task::mork_task_suspend;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
@@ -15,6 +15,6 @@ fn panic(info: &PanicInfo) -> ! {
     } else {
         mork_user_log!(error, "[user] Panicked: {}", info.message());
     }
-    mork_thread_suspend(CNodeSlot::CapInitThread as usize).unwrap();
+    mork_task_suspend(CNodeSlot::CapInitThread as usize).unwrap();
     panic!()
 }
